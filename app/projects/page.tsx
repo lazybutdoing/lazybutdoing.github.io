@@ -7,27 +7,30 @@ export const metadata = genPageMetadata({ title: 'Projects' })
 export default function Projects() {
   return (
     <>
-      <div className="divide-y divide-gray-200 dark:divide-gray-700">
+      <div>
         <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-          <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
-            Projects
+          <h1 className="text-2xl font-medium tracking-tight text-gray-900 dark:text-gray-100">
+            프로젝트
           </h1>
-          <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
-            Showcase your projects with a hero image (16 x 9)
-          </p>
         </div>
-        <div className="container py-12">
-          <div className="-m-4 flex flex-wrap">
-            {projectsData.map((d) => (
-              <Card
-                key={d.title}
-                title={d.title}
-                description={d.description}
-                imgSrc={d.imgSrc}
-                href={d.href}
-              />
-            ))}
-          </div>
+        <div className="container border-t-[1.2px] border-gray-200 pt-8 pb-12 dark:border-gray-700">
+          {projectsData.length === 0 ? (
+            <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+              아직 프로젝트가 없습니다.
+            </p>
+          ) : (
+            <div className="-m-4 flex flex-wrap">
+              {projectsData.map((d) => (
+                <Card
+                  key={d.title}
+                  title={d.title}
+                  description={d.description}
+                  imgSrc={d.imgSrc}
+                  href={d.href}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </>

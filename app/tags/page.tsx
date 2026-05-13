@@ -12,21 +12,25 @@ export default async function Page() {
   const sortedTags = tagKeys.sort((a, b) => tagCounts[b] - tagCounts[a])
   return (
     <>
-      <div className="flex flex-col items-start justify-start divide-y divide-gray-200 md:mt-24 md:flex-row md:items-center md:justify-center md:space-x-6 md:divide-y-0 dark:divide-gray-700">
-        <div className="space-x-2 pt-6 pb-8 md:space-y-5">
-          <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:border-r-2 md:px-6 md:text-6xl md:leading-14 dark:text-gray-100">
-            Tags
+      <div className="mx-auto max-w-3xl">
+        <div className="space-y-2 pt-6 pb-8 md:space-y-5">
+          <h1 className="text-2xl font-medium tracking-tight text-gray-900 dark:text-gray-100">
+            태그
           </h1>
         </div>
-        <div className="flex max-w-lg flex-wrap">
-          {tagKeys.length === 0 && 'No tags found.'}
+        <div className="flex flex-wrap border-t-[1.2px] border-gray-200 pt-8 pb-8 dark:border-gray-700">
+          {tagKeys.length === 0 && (
+            <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+              아직 태그가 없습니다.
+            </p>
+          )}
           {sortedTags.map((t) => {
             return (
               <div key={t} className="mt-2 mr-5 mb-2">
-                <Tag text={t} />
+                <Tag text={t} size="base" />
                 <Link
                   href={`/tags/${slug(t)}`}
-                  className="-ml-2 text-sm font-semibold text-gray-600 uppercase dark:text-gray-300"
+                  className="-ml-2 text-base font-semibold text-gray-400 uppercase dark:text-gray-500"
                   aria-label={`View posts tagged ${t}`}
                 >
                   {` (${tagCounts[t]})`}

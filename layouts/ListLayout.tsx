@@ -2,158 +2,137 @@
 
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
+import { slug } from 'github-slugger'
 import { formatDate } from 'pliny/utils/formatDate'
 import { CoreContent } from 'pliny/utils/contentlayer'
 import type { Blog } from 'contentlayer/generated'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
+import tagData from 'app/tag-data.json'
 
-interface PaginationProps {
-  totalPages: number
-  currentPage: number
-}
+const POSTS_PER_PAGE = 5
+
 interface ListLayoutProps {
   posts: CoreContent<Blog>[]
-  title: string
-  initialDisplayPosts?: CoreContent<Blog>[]
-  pagination?: PaginationProps
 }
 
-function Pagination({ totalPages, currentPage }: PaginationProps) {
+export default function ListLayout({ posts }: ListLayoutProps) {
   const pathname = usePathname()
-  const segments = pathname.split('/')
-  const lastSegment = segments[segments.length - 1]
-  const basePath = pathname
-    .replace(/^\//, '') // Remove leading slash
-    .replace(/\/page\/\d+\/?$/, '') // Remove any trailing /page
-    .replace(/\/$/, '') // Remove trailing slash
-  const prevPage = currentPage - 1 > 0
-  const nextPage = currentPage + 1 <= totalPages
+  const [displayCount, setDisplayCount] = useState(POSTS_PER_PAGE)
+  const tagCounts = tagData as Record<string, number>
+  const tagKeys = Object.keys(tagCounts)
+  const sortedTags = tagKeys.sort((a, b) => tagCounts[b] - tagCounts[a])
+  const currentTag = pathname.startsWith('/tags/')
+    ? decodeURIComponent(pathname.replace('/tags/', '').split('/')[0])
+    : null
 
-  return (
-    <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-      <nav className="flex justify-between">
-        {!prevPage && (
-          <button className="cursor-auto disabled:opacity-50" disabled={!prevPage}>
-            Previous
-          </button>
-        )}
-        {prevPage && (
-          <Link
-            href={currentPage - 1 === 1 ? `/${basePath}/` : `/${basePath}/page/${currentPage - 1}`}
-            rel="prev"
-          >
-            Previous
-          </Link>
-        )}
-        <span>
-          {currentPage} of {totalPages}
-        </span>
-        {!nextPage && (
-          <button className="cursor-auto disabled:opacity-50" disabled={!nextPage}>
-            Next
-          </button>
-        )}
-        {nextPage && (
-          <Link href={`/${basePath}/page/${currentPage + 1}`} rel="next">
-            Next
-          </Link>
-        )}
-      </nav>
-    </div>
-  )
-}
-
-export default function ListLayout({
-  posts,
-  title,
-  initialDisplayPosts = [],
-  pagination,
-}: ListLayoutProps) {
-  const [searchValue, setSearchValue] = useState('')
-  const filteredBlogPosts = posts.filter((post) => {
-    const searchContent = post.title + post.summary + post.tags?.join(' ')
-    return searchContent.toLowerCase().includes(searchValue.toLowerCase())
-  })
-
-  // If initialDisplayPosts exist, display it if no searchValue is specified
-  const displayPosts =
-    initialDisplayPosts.length > 0 && !searchValue ? initialDisplayPosts : filteredBlogPosts
+  const displayPosts = posts.slice(0, displayCount)
+  const hasMore = displayCount < posts.length
 
   return (
     <>
-      <div className="divide-y divide-gray-200 dark:divide-gray-700">
-        <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-          <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
-            {title}
+      <div>
+        <div className="space-y-2 pt-6 pb-8">
+          <h1 className="text-2xl font-medium tracking-tight text-gray-900 dark:text-gray-100">
+            모든 글
           </h1>
-          <div className="relative max-w-lg">
-            <label>
-              <span className="sr-only">Search articles</span>
-              <input
-                aria-label="Search articles"
-                type="text"
-                onChange={(e) => setSearchValue(e.target.value)}
-                placeholder="Search articles"
-                className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-900 dark:border-gray-900 dark:bg-gray-800 dark:text-gray-100"
-              />
-            </label>
-            <svg
-              className="absolute top-3 right-3 h-5 w-5 text-gray-400 dark:text-gray-300"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </div>
         </div>
-        <ul>
-          {!filteredBlogPosts.length && 'No posts found.'}
-          {displayPosts.map((post) => {
-            const { path, date, title, summary, tags } = post
-            return (
-              <li key={path} className="py-4">
-                <article className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
-                  <dl>
-                    <dt className="sr-only">Published on</dt>
-                    <dd className="text-base leading-6 font-medium text-gray-500 dark:text-gray-400">
-                      <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
-                    </dd>
-                  </dl>
-                  <div className="space-y-3 xl:col-span-3">
-                    <div>
-                      <h3 className="text-2xl leading-8 font-bold tracking-tight">
-                        <Link href={`/${path}`} className="text-gray-900 dark:text-gray-100">
-                          {title}
-                        </Link>
-                      </h3>
-                      <div className="flex flex-wrap">
-                        {tags?.map((tag) => (
-                          <Tag key={tag} text={tag} />
-                        ))}
-                      </div>
-                    </div>
-                    <div className="prose max-w-none text-gray-500 dark:text-gray-400">
-                      {summary}
-                    </div>
-                  </div>
-                </article>
-              </li>
-            )
-          })}
-        </ul>
+        {posts.length === 0 ? (
+          <div className="border-t-[1.2px] border-gray-200 pt-8 dark:border-gray-700">
+            <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+              아직 글이 없습니다.
+            </p>
+          </div>
+        ) : (
+          <div className="flex border-t-[1.2px] border-gray-200 sm:space-x-24 dark:border-gray-700">
+            <div className="hidden max-w-[220px] min-w-[220px] self-stretch border-r-[1.2px] border-gray-200 sm:block dark:border-gray-700">
+              <div className="sticky top-0 max-h-screen overflow-auto px-6 pt-5 pb-4">
+                <ul className="mt-1">
+                  {sortedTags.map((t) => {
+                    return (
+                      <li key={t} className="my-5">
+                        {currentTag === t ? (
+                          <Link
+                            href="/blog"
+                            className="group text-base font-medium uppercase"
+                            aria-label={`${t} 태그 선택 취소`}
+                          >
+                            <span className="text-primary-500">› {t}</span>
+                            <span className="text-gray-400 dark:text-gray-500">{` (${tagCounts[t]})`}</span>
+                          </Link>
+                        ) : (
+                          <Link
+                            href={`/tags/${slug(t)}`}
+                            className="group text-base font-medium uppercase"
+                            aria-label={`View posts tagged ${t}`}
+                          >
+                            <span className="text-primary-500 group-hover:text-primary-600 dark:group-hover:text-primary-400">
+                              {t}
+                            </span>
+                            <span className="text-gray-400 dark:text-gray-500">{` (${tagCounts[t]})`}</span>
+                          </Link>
+                        )}
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+            </div>
+            <div className="pt-5">
+              <ul>
+                {displayPosts.map((post) => {
+                  const { path, date, title, summary, tags } = post
+                  return (
+                    <li key={path} className="py-5">
+                      <article className="flex flex-col space-y-2 xl:space-y-0">
+                        <dl>
+                          <dt className="sr-only">Published on</dt>
+                          <dd className="text-sm leading-6 font-medium text-gray-500 dark:text-gray-400">
+                            <time dateTime={date} suppressHydrationWarning>
+                              {formatDate(date, siteMetadata.locale)}
+                            </time>
+                          </dd>
+                        </dl>
+                        <div className="space-y-3">
+                          <div>
+                            <h2 className="text-lg leading-8 font-medium tracking-tight">
+                              <Link
+                                href={`/${path}`}
+                                className="hover:text-primary-500 dark:hover:text-primary-400 text-gray-900 dark:text-gray-100"
+                              >
+                                {title}
+                              </Link>
+                            </h2>
+                            <div className="mt-2 flex flex-wrap">
+                              {tags?.map((tag) => (
+                                <Tag key={tag} text={tag} />
+                              ))}
+                            </div>
+                          </div>
+                          <div className="prose max-w-none text-gray-500 dark:text-gray-400">
+                            {summary}
+                          </div>
+                        </div>
+                      </article>
+                    </li>
+                  )
+                })}
+              </ul>
+              {hasMore && (
+                <div className="flex justify-center pt-8 pb-4">
+                  <button
+                    onClick={() => setDisplayCount((prev) => prev + POSTS_PER_PAGE)}
+                    className="border-primary-500 text-primary-500 hover:bg-primary-500 cursor-pointer rounded-full border px-6 py-2 text-sm font-medium hover:text-white dark:hover:text-white"
+                  >
+                    더 보기
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
-      {pagination && pagination.totalPages > 1 && !searchValue && (
-        <Pagination currentPage={pagination.currentPage} totalPages={pagination.totalPages} />
-      )}
     </>
   )
 }

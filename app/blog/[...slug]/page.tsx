@@ -7,7 +7,6 @@ import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import { sortPosts, coreContent, allCoreContent } from 'pliny/utils/contentlayer'
 import { allBlogs, allAuthors } from 'contentlayer/generated'
 import type { Authors, Blog } from 'contentlayer/generated'
-import PostSimple from '@/layouts/PostSimple'
 import PostLayout from '@/layouts/PostLayout'
 import PostBanner from '@/layouts/PostBanner'
 import { Metadata } from 'next'
@@ -16,7 +15,6 @@ import { notFound } from 'next/navigation'
 
 const defaultLayout = 'PostLayout'
 const layouts = {
-  PostSimple,
   PostLayout,
   PostBanner,
 }
@@ -87,8 +85,6 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
     return notFound()
   }
 
-  const prev = sortedCoreContents[postIndex + 1]
-  const next = sortedCoreContents[postIndex - 1]
   const post = allBlogs.find((p) => p.slug === slug) as Blog
   const authorList = post?.authors || ['default']
   const authorDetails = authorList.map((author) => {
@@ -104,6 +100,15 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
     }
   })
 
+  const total = sortedCoreContents.length
+  let windowStart = Math.max(0, postIndex - 2)
+  let windowEnd = windowStart + 4
+  if (windowEnd >= total) {
+    windowEnd = total - 1
+    windowStart = Math.max(0, windowEnd - 4)
+  }
+  const contextPosts = sortedCoreContents.slice(windowStart, windowEnd + 1)
+
   const Layout = layouts[post.layout || defaultLayout]
 
   return (
@@ -112,7 +117,7 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Layout content={mainContent} authorDetails={authorDetails} next={next} prev={prev}>
+      <Layout content={mainContent} authorDetails={authorDetails} contextPosts={contextPosts}>
         <MDXLayoutRenderer code={post.body.code} components={components} toc={post.toc} />
       </Layout>
     </>

@@ -7,20 +7,10 @@ interface Project {
 
 const projectsData: Project[] = [
   {
-    title: 'A Search Engine',
-    description: `What if you could look up any information in the world? Webpages, images, videos
-    and more. Google has many features to help you find exactly what you're looking
-    for.`,
-    imgSrc: '/static/images/google.png',
-    href: 'https://www.google.com',
-  },
-  {
-    title: 'The Time Machine',
-    description: `Imagine being able to travel back in time or to the future. Simple turn the knob
-    to the desired date and press "Go". No more worrying about lost keys or
-    forgotten headphones with this simple yet affordable solution.`,
+    title: '타임머신',
+    description: `과거나 미래로 자유롭게 여행할 수 있다면 어떨까요? 원하는 날짜로 다이얼을 돌리고 "이동"만 누르면 됩니다. 잃어버린 열쇠나 두고 온 이어폰 걱정은 이제 그만.`,
     imgSrc: '/static/images/time-machine.jpg',
-    href: '/blog/the-time-machine',
+    href: '/blog/2018-08-001',
   },
 ]
 
