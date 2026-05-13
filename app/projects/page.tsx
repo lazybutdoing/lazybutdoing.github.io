@@ -9,7 +9,7 @@ export default function Projects() {
     <>
       <div>
         <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-          <h1 className="text-2xl font-medium tracking-tight text-gray-900 dark:text-gray-100">
+          <h1 className="text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
             프로젝트
           </h1>
         </div>

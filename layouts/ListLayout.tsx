@@ -34,7 +34,7 @@ export default function ListLayout({ posts }: ListLayoutProps) {
     <>
       <div>
         <div className="space-y-2 pt-6 pb-8">
-          <h1 className="text-2xl font-medium tracking-tight text-gray-900 dark:text-gray-100">
+          <h1 className="text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
             모든 글
           </h1>
         </div>
@@ -88,7 +88,7 @@ export default function ListLayout({ posts }: ListLayoutProps) {
                       <article className="flex flex-col space-y-2 xl:space-y-0">
                         <dl>
                           <dt className="sr-only">Published on</dt>
-                          <dd className="text-sm leading-6 font-medium text-gray-500 dark:text-gray-400">
+                          <dd className="text-sm leading-6 font-medium text-gray-400 dark:text-gray-500">
                             <time dateTime={date} suppressHydrationWarning>
                               {formatDate(date, siteMetadata.locale)}
                             </time>
