@@ -13,12 +13,14 @@ export default function Projects() {
             프로젝트
           </h1>
         </div>
-        <div className="container border-t-[1.2px] border-gray-200 pt-8 pb-12 dark:border-gray-700">
-          {projectsData.length === 0 ? (
+        {projectsData.length === 0 ? (
+          <div className="border-t-[1.2px] border-gray-200 pt-8 pb-8 dark:border-gray-700">
             <p className="text-sm font-light text-gray-500 dark:text-gray-400">
               아직 프로젝트가 없습니다.
             </p>
-          ) : (
+          </div>
+        ) : (
+          <div className="container border-t-[1.2px] border-gray-200 pt-8 pb-12 dark:border-gray-700">
             <div className="-m-4 flex flex-wrap">
               {projectsData.map((d) => (
                 <Card
@@ -30,8 +32,8 @@ export default function Projects() {
                 />
               ))}
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </>
   )

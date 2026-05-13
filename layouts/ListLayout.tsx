@@ -39,7 +39,7 @@ export default function ListLayout({ posts }: ListLayoutProps) {
           </h1>
         </div>
         {posts.length === 0 ? (
-          <div className="border-t-[1.2px] border-gray-200 pt-8 dark:border-gray-700">
+          <div className="border-t-[1.2px] border-gray-200 pt-8 pb-8 dark:border-gray-700">
             <p className="text-sm font-light text-gray-500 dark:text-gray-400">
               아직 글이 없습니다.
             </p>

@@ -13,7 +13,7 @@ export default function AuthorLayout({ children, content }: Props) {
 
   return (
     <>
-      <div className="mx-auto max-w-3xl">
+      <div>
         <div className="space-y-2 pt-6 pb-8 md:space-y-5">
           <h1 className="text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
             소개
