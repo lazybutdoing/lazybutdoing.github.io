@@ -1,4 +1,4 @@
-import 'css/prism.css'
+import '@/css/prism.css'
 import 'katex/dist/katex.css'
 
 import PageTitle from '@/components/PageTitle'
@@ -71,8 +71,14 @@ export async function generateMetadata(props: {
   }
 }
 
+export const dynamicParams = false
+
 export const generateStaticParams = async () => {
-  return allBlogs.map((p) => ({ slug: p.slug.split('/').map((name) => decodeURI(name)) }))
+  const params = allBlogs.map((p) => ({
+    slug: p.slug.split('/').map((name) => decodeURI(name)),
+  }))
+  // Next.js 15 throws if generateStaticParams returns [] in output:export mode
+  return params.length > 0 ? params : [{ slug: ['__placeholder__'] }]
 }
 
 export default async function Page(props: { params: Promise<{ slug: string[] }> }) {
