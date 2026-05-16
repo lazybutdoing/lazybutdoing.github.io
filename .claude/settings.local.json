@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(EXPORT=1 UNOPTIMIZED=1 yarn build)",
+      "Bash(yarn build *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(gh repo *)",
+      "Bash(gh auth *)",
+      "Bash(git push *)"
+    ]
+  }
+}
