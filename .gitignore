@@ -45,3 +45,7 @@ yarn-error.log*
 
 # Contentlayer
 .contentlayer
+
+# private blog posts (로컬 전용, git에 올리지 않음)
+data/blog/_private/
+data/blog/*.private.mdx

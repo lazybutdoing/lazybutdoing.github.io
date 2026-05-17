@@ -181,6 +181,11 @@ canonicalUrl: '' # 정규 URL (선택)
 ### MDX에서 사용 가능한 커스텀 컴포넌트
 
 - `<TOCInline toc={props.toc} />` — 인라인 목차
+- `<PhotoPost photos={[...]}>...</PhotoPost>` — 사진+글 2단 레이아웃 ([[photo-post-layout]])
+  - 데스크탑: 사진(좌) + 글(우), 본문 폭의 절반인 정사각형 두 칸. 글이 길면 우측에 스크롤
+  - 모바일: 사진(상, 가로 폭 정사각형) + 글(하, 스크롤 없이 자연 흐름)
+  - `photos`는 `string[]` 또는 `{ src, alt }[]`. 2개 이상이면 hover 시 양 끝에 반투명 화살표, 하단 중앙에 인스타그램 스타일 도트 인디케이터(현재 사진은 흰색, 나머지는 반투명) 표시
+  - 사진은 원본 비율 유지(`object-contain`), 정사각형에 맞춰 letterbox 처리
 - 표준 Markdown + GFM + 수식(KaTeX) + 코드 하이라이팅(Prism) 지원
 - `rehype-slug` 활성화 (모든 제목에 ID 자동 부여, 앵커 링크용)
 - `rehype-autolink-headings` 비활성화 (자동 링크 아이콘 미사용)
