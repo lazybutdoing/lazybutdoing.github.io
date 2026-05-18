@@ -12,14 +12,14 @@ export default function AuthorLayout({ children, content }: Props) {
   const { name, avatar, occupation, company, email, twitter, bluesky, linkedin, github } = content
 
   return (
-    <>
-      <div>
-        <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-          <h1 className="text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
-            소개
+    <div className="space-y-16 pb-12">
+      <section>
+        <div className="flex items-baseline justify-between border-b-[1.2px] border-gray-200 pb-3 dark:border-gray-700">
+          <h1 className="text-sm font-normal tracking-wide text-gray-900 dark:text-gray-100">
+            About
           </h1>
         </div>
-        <div className="flex flex-col items-center space-y-2 border-t-[1.2px] border-gray-200 px-6 pt-8 dark:border-gray-700">
+        <div className="flex flex-col items-center space-y-2 pt-6">
           <div className="flex flex-col items-center pt-8">
             {avatar && (
               <Image
@@ -47,7 +47,7 @@ export default function AuthorLayout({ children, content }: Props) {
             </div>
           </div>
         </div>
-      </div>
-    </>
+      </section>
+    </div>
   )
 }

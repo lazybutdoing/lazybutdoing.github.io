@@ -1,86 +1,57 @@
 import Link from '@/components/Link'
-import Tag from '@/components/Tag'
-import siteMetadata from '@/data/siteMetadata'
-import { formatDate } from 'pliny/utils/formatDate'
-import NewsletterForm from 'pliny/ui/NewsletterForm'
+import TextPostList from '@/components/TextPostList'
+import PhotoTileGrid from '@/components/PhotoTileGrid'
+import categories from '@/data/categories'
+import { CoreContent } from 'pliny/utils/contentlayer'
+import type { Blog } from 'contentlayer/generated'
 
-const MAX_DISPLAY = 5
+const TEXT_PREVIEW = 3
+const PHOTO_PREVIEW = 6
 
-export default function Home({ posts }) {
+interface Props {
+  posts: CoreContent<Blog>[]
+}
+
+export default function Home({ posts }: Props) {
   return (
-    <>
-      <div>
-        <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-          <h1 className="text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
-            최근 글
-          </h1>
-        </div>
-        {!posts.length ? (
-          <div className="border-t-[1.2px] border-gray-200 pt-8 pb-8 dark:border-gray-700">
-            <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-              아직 글이 없습니다.
-            </p>
-          </div>
-        ) : (
-          <ul className="divide-y divide-gray-200 border-t-[1.2px] border-gray-200 dark:divide-gray-700 dark:border-gray-700">
-            {posts.slice(0, MAX_DISPLAY).map((post) => {
-              const { slug, date, title, summary, tags } = post
-              return (
-                <li key={slug} className="py-12">
-                  <article>
-                    <div className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
-                      <dl>
-                        <dt className="sr-only">Published on</dt>
-                        <dd className="text-sm leading-6 font-medium text-gray-500 dark:text-gray-400">
-                          <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
-                        </dd>
-                      </dl>
-                      <div className="space-y-5 xl:col-span-3">
-                        <div className="space-y-6">
-                          <div>
-                            <h2 className="text-lg leading-8 font-medium tracking-tight">
-                              <Link
-                                href={`/blog/${slug}`}
-                                className="hover:text-primary-500 dark:hover:text-primary-400 text-gray-900 dark:text-gray-100"
-                              >
-                                {title}
-                              </Link>
-                            </h2>
-                            <div className="mt-2 flex flex-wrap">
-                              {tags.map((tag) => (
-                                <Tag key={tag} text={tag} />
-                              ))}
-                            </div>
-                          </div>
-                          <div className="prose max-w-none text-gray-500 dark:text-gray-400">
-                            {summary}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </article>
-                </li>
-              )
-            })}
-          </ul>
-        )}
-      </div>
-      {posts.length > MAX_DISPLAY && (
-        <div className="flex justify-end text-base leading-6 font-medium">
-          <Link
-            href="/blog"
-            className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-            aria-label="All posts"
-          >
-            모든 글 확인하기 &rarr;
-          </Link>
-        </div>
-      )}
-      {siteMetadata.newsletter?.provider && (
-        <div className="flex items-center justify-center pt-4">
-          <NewsletterForm />
-        </div>
-      )}
-    </>
+    <div className="space-y-16 pb-12">
+      {categories.map((category) => {
+        const categoryPosts = posts.filter((p) => p.category === category.slug)
+        const limit = category.type === 'photo' ? PHOTO_PREVIEW : TEXT_PREVIEW
+        const preview = categoryPosts.slice(0, limit)
+        const hasMore = categoryPosts.length > limit
+
+        return (
+          <section key={category.slug}>
+            <div className="flex items-baseline justify-between border-b-[1.2px] border-gray-200 pb-3 dark:border-gray-700">
+              <h2 className="text-sm font-normal tracking-wide text-gray-900 dark:text-gray-100">
+                <Link
+                  href={`/${category.slug}`}
+                  className="hover:text-primary-500 dark:hover:text-primary-400"
+                >
+                  {category.title}
+                </Link>
+              </h2>
+              {hasMore && (
+                <Link
+                  href={`/${category.slug}`}
+                  className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 text-xs"
+                  aria-label={`View all ${category.title} posts`}
+                >
+                  View all &rarr;
+                </Link>
+              )}
+            </div>
+            <div className="pt-6">
+              {category.type === 'photo' ? (
+                <PhotoTileGrid posts={preview} />
+              ) : (
+                <TextPostList posts={preview} />
+              )}
+            </div>
+          </section>
+        )
+      })}
+    </div>
   )
 }

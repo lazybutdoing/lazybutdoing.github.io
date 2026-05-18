@@ -8,7 +8,26 @@
       "Bash(gh repo *)",
       "Bash(gh auth *)",
       "Bash(git push *)",
-      "Bash(python3 *)"
+      "Bash(python3 *)",
+      "Bash(git *)",
+      "Bash(yarn prettier *)",
+      "Bash(yarn dev *)",
+      "Bash(curl -s http://localhost:3001)",
+      "Bash(curl -sI http://localhost:3001/_next/static/css/app/layout.css)",
+      "Bash(curl -s http://localhost:3001/_next/static/css/app/layout.css)",
+      "Bash(curl -s http://localhost:3000)",
+      "Read(//tmp/**)",
+      "Bash(grep -oE \"<body[^>]*>.{0,500}\")",
+      "Bash(grep -oE \"<header.{0,3000}\" /tmp/page3000.html)",
+      "Bash(curl -s http://localhost:3000/blog/2026-05-006/)",
+      "Bash(curl -sI http://localhost:3000/blog/2026-05-006/)",
+      "Bash(curl -sI http://localhost:3000/blog/2026-05-006/ http://localhost:3001/blog/2026-05-006/)",
+      "Bash(grep -E \"HTTP|^$\")",
+      "Bash(curl -sI http://localhost:3000/meals/ http://localhost:3000/economy-weekly/ http://localhost:3000/blog/2026-04-001/ http://localhost:3000/blog/2026-05-006/)",
+      "Bash(curl -s http://localhost:3000/_next/static/css/app/layout.css)",
+      "Bash(curl -sI http://localhost:3000/)",
+      "Bash(curl -s http://localhost:3000/)",
+      "Bash(curl -sI http://localhost:3001/blog/2026-05-006/)"
     ]
   }
 }

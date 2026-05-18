@@ -4,7 +4,6 @@ import { CoreContent } from 'pliny/utils/contentlayer'
 import type { Blog, Authors } from 'contentlayer/generated'
 import Link from '@/components/Link'
 import PageTitle from '@/components/PageTitle'
-import SectionContainer from '@/components/SectionContainer'
 import Tag from '@/components/Tag'
 import TagNotice from '@/components/TagNotice'
 import siteMetadata from '@/data/siteMetadata'
@@ -32,13 +31,13 @@ export default function PostBanner({
   contextPosts,
   children,
 }: LayoutProps) {
-  const { path, slug, date, title, tags, images } = content
-  const basePath = path.split('/')[0]
+  const { path, slug, date, title, tags, images, category } = content
+  const backHref = category ? `/${category}` : '/'
   const displayImage =
     images && images.length > 0 ? images[0] : 'https://picsum.photos/seed/picsum/800/400'
 
   return (
-    <SectionContainer>
+    <>
       <ScrollTopAndComment />
       <article>
         <div>
@@ -54,7 +53,7 @@ export default function PostBanner({
                 </div>
               )}
               <PageTitle>{title}</PageTitle>
-              <div className="flex flex-wrap items-center gap-x-2 text-sm text-gray-500 dark:text-gray-400">
+              <div className="flex flex-wrap items-center gap-x-2 text-xs font-normal tracking-wide text-gray-500 dark:text-gray-400">
                 {authorDetails.map((author, index) => (
                   <div className="flex items-center gap-x-2" key={author.name}>
                     {author.avatar && (
@@ -139,23 +138,23 @@ export default function PostBanner({
                   </ul>
                 ) : (
                   <p className="text-sm font-light text-gray-900 dark:text-gray-100">
-                    아직 글이 없습니다.
+                    No posts yet.
                   </p>
                 )}
               </div>
               <div className="mt-8">
                 <Link
-                  href={`/${basePath}`}
+                  href={backHref}
                   className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 text-sm"
-                  aria-label="글 목록으로"
+                  aria-label="Back to posts"
                 >
-                  &larr; 글 목록으로
+                  &larr; Back to posts
                 </Link>
               </div>
             </footer>
           </div>
         </div>
       </article>
-    </SectionContainer>
+    </>
   )
 }

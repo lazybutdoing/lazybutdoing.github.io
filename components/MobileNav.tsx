@@ -5,6 +5,7 @@ import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'bo
 import { Fragment, useState, useEffect, useRef } from 'react'
 import Link from './Link'
 import headerNavLinks from '@/data/headerNavLinks'
+import categories from '@/data/categories'
 
 const MobileNav = () => {
   const [navShow, setNavShow] = useState(false)
@@ -76,16 +77,28 @@ const MobileNav = () => {
                   ref={navRef}
                   className="mt-8 flex h-full basis-0 flex-col items-start overflow-y-auto pt-2 pl-12 text-left"
                 >
-                  {headerNavLinks.map((link) => (
+                  {categories.map((c) => (
                     <Link
-                      key={link.title}
-                      href={link.href}
-                      className="hover:text-primary-500 dark:hover:text-primary-400 mb-4 py-2 pr-4 text-2xl font-medium tracking-normal text-gray-900 outline outline-0 dark:text-gray-100"
+                      key={c.slug}
+                      href={`/${c.slug}`}
+                      className="hover:text-primary-500 dark:hover:text-primary-400 mb-4 py-2 pr-4 text-lg font-normal tracking-wide text-gray-900 outline outline-0 dark:text-gray-100"
                       onClick={onToggleNav}
                     >
-                      {link.title}
+                      {c.title}
                     </Link>
                   ))}
+                  {headerNavLinks
+                    .filter((link) => link.href !== '/')
+                    .map((link) => (
+                      <Link
+                        key={link.title}
+                        href={link.href}
+                        className="hover:text-primary-500 dark:hover:text-primary-400 mb-4 py-2 pr-4 text-lg font-normal tracking-wide text-gray-900 outline outline-0 dark:text-gray-100"
+                        onClick={onToggleNav}
+                      >
+                        {link.title}
+                      </Link>
+                    ))}
                 </nav>
 
                 <button

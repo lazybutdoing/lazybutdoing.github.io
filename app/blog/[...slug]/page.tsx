@@ -86,12 +86,17 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
   const slug = decodeURI(params.slug.join('/'))
   // Filter out drafts in production
   const sortedCoreContents = allCoreContent(sortPosts(allBlogs))
-  const postIndex = sortedCoreContents.findIndex((p) => p.slug === slug)
+  const post = allBlogs.find((p) => p.slug === slug) as Blog
+  if (!post) {
+    return notFound()
+  }
+
+  const sameCategoryPosts = sortedCoreContents.filter((p) => p.category === post.category)
+  const postIndex = sameCategoryPosts.findIndex((p) => p.slug === slug)
   if (postIndex === -1) {
     return notFound()
   }
 
-  const post = allBlogs.find((p) => p.slug === slug) as Blog
   const authorList = post?.authors || ['default']
   const authorDetails = authorList.map((author) => {
     const authorResults = allAuthors.find((p) => p.slug === author)
@@ -106,14 +111,14 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
     }
   })
 
-  const total = sortedCoreContents.length
+  const total = sameCategoryPosts.length
   let windowStart = Math.max(0, postIndex - 2)
   let windowEnd = windowStart + 4
   if (windowEnd >= total) {
     windowEnd = total - 1
     windowStart = Math.max(0, windowEnd - 4)
   }
-  const contextPosts = sortedCoreContents.slice(windowStart, windowEnd + 1)
+  const contextPosts = sameCategoryPosts.slice(windowStart, windowEnd + 1)
 
   const Layout = layouts[post.layout || defaultLayout]
 
