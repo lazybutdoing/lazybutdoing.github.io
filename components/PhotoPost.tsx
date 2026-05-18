@@ -27,13 +27,13 @@ export default function PhotoPost({ photos, children }: Props) {
   const next = () => setIndex((i) => (i + 1) % count)
 
   return (
-    <div className="not-prose my-8 grid grid-cols-1 gap-4 md:grid-cols-2">
+    <div className="not-prose my-8 grid grid-cols-1 gap-6 md:grid-cols-[20rem_1fr] md:gap-8">
       <div className="group relative aspect-square overflow-hidden rounded-lg bg-gray-50 dark:bg-gray-900">
         <Image
           src={getSrc(current)}
           alt={getAlt(current)}
           fill
-          sizes="(min-width: 768px) 50vw, 100vw"
+          sizes="(min-width: 768px) 320px, 100vw"
           className="object-contain"
         />
         {count > 1 && (
@@ -92,7 +92,7 @@ export default function PhotoPost({ photos, children }: Props) {
           </>
         )}
       </div>
-      <div className="prose dark:prose-invert max-w-none md:aspect-square md:overflow-y-auto">
+      <div className="prose dark:prose-invert max-w-none md:h-[20rem] md:[scrollbar-gutter:stable] md:overflow-y-auto">
         {children}
       </div>
     </div>
